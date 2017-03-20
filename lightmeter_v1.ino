@@ -1,5 +1,36 @@
 
-/* This is a light meter using BH1750 light sensor */
+/* This is a light meter using BH1750 light sensor
+
+
+pin connections:
+
+BH1750
+        vcc -> 3.3v
+        gnd -> gnd
+        scl -> a5
+        sda -> a4
+        addr-> a3
+
+LCD 1602
+        gnd -> gnd
+        vcc -> 5v
+        sda -> a4
+        scl -> a5
+
+Rotary encoder
+        gnd -> gnd
+        vcc -> 5v
+        sw  -> a2
+        dt  -> a1
+        clk -> a0
+
+
+
+
+ */
+
+
+
  
  // First define the library :
  #include <BH1750FVI.h> // Sensor Library
@@ -93,6 +124,7 @@ void set_iso(){
   iso = isoArray[iso_index];
 }
 
+//functions for f-mode
 void calculate_shutter(){
   lux = LightSensor.GetLightIntensity();
   shutter = lux / (fstop * fstop) * iso / 250;
@@ -108,6 +140,7 @@ void set_fstop(){
   fstop = fstopArray[fstop_index];
 }
 
+//general display function
 void set_display(){
       lcd.setCursor(1, 0);
       lcd.print("ISO");
@@ -148,6 +181,8 @@ void set_mode(){
       lcd.clear();
       lcd.setCursor(6, 0);
       lcd.print(">");
+      lcd.setCursor(15, 0);
+      lcd.print("<");
       set_display();
       delay(500);
       break;
@@ -159,6 +194,8 @@ void set_mode(){
       lcd.clear();
       lcd.setCursor(6, 1);
       lcd.print(">");
+      lcd.setCursor(15, 1);
+      lcd.print("<");
       set_display();
       delay(500);
       break;
@@ -169,6 +206,8 @@ void set_mode(){
       lcd.clear();
       lcd.setCursor(0, 0);
       lcd.print(">");
+      lcd.setCursor(4, 0);
+      lcd.print("<");
       set_iso();
       set_display();
       delay(500);
@@ -246,7 +285,7 @@ void loop() {
   Serial.print("f ");
   Serial.println(fstop);
 
-  Serial.print("________________________");
+  Serial.println("________________________");
 
   
 }
