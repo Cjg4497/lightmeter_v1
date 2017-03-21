@@ -41,6 +41,8 @@ Rotary encoder
 #include <ClickEncoder.h>
 #include <TimerOne.h>
 
+#define num_bones 20
+
 ClickEncoder *encoder;
 int encoder_value = 0; 
 int iso_index=0; 
@@ -95,7 +97,7 @@ enum Modes {
 Modes current_mode;
 Modes next_mode;
 
-int bones = 10;
+int bones = num_bones;
  
 void watchdog(){
   bones --;
@@ -113,7 +115,7 @@ void watchdog(){
 }
 
 void feeddog(){
-  bones = 10;
+  bones = num_bones;
 }
 
 // functions for s-mode
@@ -265,7 +267,7 @@ void setup() {
   lcd.print("Lightmeter");
   lcd.setCursor(1, 1);
   lcd.print("Please wait..."); 
-  delay(500);
+  delay(1000);
   lcd.clear();
   
   current_mode = f_mode;
