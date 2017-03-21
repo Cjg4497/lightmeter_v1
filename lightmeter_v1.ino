@@ -67,6 +67,9 @@ float fstop = 2.8;
 int shutter = 125;
 int iso = 100;
 
+float last_fstop;
+int last_shutter;
+
 const unsigned int shutterspeedArray[] = {
   125, 250, 500, 1000, 2000, 4000, 1, 2, 4, 8, 15, 30, 60
 };
@@ -130,8 +133,12 @@ void set_shutter(){
 }
 
 void calculate_fstop(){
+  last_fstop = fstop;
   lux = LightSensor.GetLightIntensity();
   fstop = sqrt((lux * iso/250) / shutter);
+  if (last_fstop != fstop){
+    lcd.clear();
+  }
 }
 
 //set iso
@@ -147,8 +154,12 @@ void set_iso(){
 
 //functions for f-mode
 void calculate_shutter(){
+  last_shutter = shutter;
   lux = LightSensor.GetLightIntensity();
   shutter = lux / (fstop * fstop) * iso / 250;
+  if (last_shutter != shutter){
+    lcd.clear();
+  }
 }
 
 void set_fstop(){
@@ -180,7 +191,6 @@ void set_mode(){
     case lux_mode:
       next_mode = s_mode;
       get_ev();
-      lcd.clear();
       lcd.setCursor(0, 0);
       lcd.print("LUX");
       lcd.setCursor(5, 0);
@@ -199,7 +209,6 @@ void set_mode(){
       next_mode = f_mode;
       set_shutter();
       calculate_fstop();
-      lcd.clear();
       lcd.setCursor(6, 0);
       lcd.print(">");
       lcd.setCursor(15, 0);
@@ -212,7 +221,6 @@ void set_mode(){
       next_mode = iso_mode;
       set_fstop();
       calculate_shutter();
-      lcd.clear();
       lcd.setCursor(6, 1);
       lcd.print(">");
       lcd.setCursor(15, 1);
@@ -224,7 +232,6 @@ void set_mode(){
     case iso_mode:
       next_mode = s_mode;
       calculate_fstop();
-      lcd.clear();
       lcd.setCursor(0, 0);
       lcd.print(">");
       lcd.setCursor(4, 0);
@@ -296,12 +303,14 @@ void loop() {
       VERBOSECASE(ClickEncoder::Released)
       case ClickEncoder::Clicked:
           current_mode = next_mode;
+          lcd.clear();
           feeddog();
           lcd.backlight();
 
         break;
       case ClickEncoder::Held:
         current_mode = lux_mode;
+        lcd.clear();
         feeddog();
         lcd.backlight();
       break;
