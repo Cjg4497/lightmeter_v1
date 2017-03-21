@@ -94,8 +94,27 @@ enum Modes {
 
 Modes current_mode;
 Modes next_mode;
- 
 
+int bones = 10;
+ 
+void watchdog(){
+  bones --;
+
+  if(bones <=0){
+    bones = 0;
+    lcd.noBacklight();
+
+  }
+  else{
+    lcd.backlight();
+
+  }
+
+}
+
+void feeddog(){
+  bones = 10;
+}
 
 // functions for s-mode
 void set_shutter(){
@@ -249,14 +268,19 @@ void setup() {
   delay(500);
   lcd.clear();
   
-  current_mode = lux_mode;
+  current_mode = f_mode;
 }
 
 
  
 void loop() {
   
-  
+  watchdog();
+
+  if(encoder_value != 0){
+    feeddog();
+    lcd.backlight();
+  }
    
   set_mode();
 
@@ -270,10 +294,14 @@ void loop() {
       VERBOSECASE(ClickEncoder::Released)
       case ClickEncoder::Clicked:
           current_mode = next_mode;
+          feeddog();
+          lcd.backlight();
 
         break;
       case ClickEncoder::Held:
         current_mode = lux_mode;
+        feeddog();
+        lcd.backlight();
       break;
 
     }
