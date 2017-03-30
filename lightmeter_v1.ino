@@ -269,14 +269,14 @@ void setup() {
   Timer1.initialize(500);
   Timer1.attachInterrupt(timerIsr); 
   
-
+/*
   lcd.setCursor(0, 0);
   lcd.print("Lightmeter");
   lcd.setCursor(1, 1);
   lcd.print("Please wait..."); 
   delay(1000);
   lcd.clear();
-  
+*/  
   current_mode = f_mode;
 }
 
